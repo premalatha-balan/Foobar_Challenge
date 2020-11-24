@@ -1,5 +1,4 @@
 def​ ​solution(s):
-​ ​​ ​​ ​​ ​#​ ​Your​ ​code​ ​here
 ​ ​​ ​​ ​​ ​brail_str=""
 ​ ​​ ​​ ​​ ​for​ ​i​ ​in​ ​s:
 ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​if​ ​i.isupper():
