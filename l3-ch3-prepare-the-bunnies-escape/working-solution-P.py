@@ -88,8 +88,10 @@ def find_path(mmap):
             queue[nb].append(x[0])
         else:
             for i in x: nodes.append(i)
+            if node == [2,3]:
+                print(queue[nb], "branch for node [2,3] and index is", nb)
             xb = copy.deepcopy(queue[nb])
-            for i in range(len(x)-1): queue.append(xb)    
+            for i in range(1,len(x)): queue.insert(nb+i, xb)    #the mistake is here
             for i in range(len(x)): 
                 queue[nb+i].append(x[i])
                 
@@ -157,12 +159,12 @@ def solution(nmap):
 #          [0, 0, 0, 1, 0, 1, 0]]
 
 # #test case - answer is 15
-# nmap = [[0, 0, 0, 1, 1, 0, 0, 0, 0],
+# nmap = [[0, 0, 0, 1, 1,	0, 0, 0, 0],
 #         [1, 1, 0, 1, 1, 0, 1, 1, 0],
 #         [1, 1, 0, 1, 1, 0, 1, 1, 0],
 #         [1, 1, 0, 0, 0, 0, 0, 1, 0],
-#         [0, 1, 1, 1, 1, 1, 0, 0, 1],
-#         [0, 0, 0, 1, 1, 1, 0, 1, 1],
+#         [0, 1, 1, 1, 1,	1, 0, 0, 1],
+#         [0, 0, 0, 1, 1,	1, 0, 1, 1],
 #         [0, 1, 0, 0, 0, 0, 0, 1, 0]]
 
 nmap = [[0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
