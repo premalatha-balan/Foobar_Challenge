@@ -91,7 +91,7 @@ def find_path(mmap):
             if node == [2,3]:
                 print(queue[nb], "branch for node [2,3] and index is", nb)
             xb = copy.deepcopy(queue[nb])
-            for i in range(1,len(x)): queue.insert(nb+i, xb)    #the mistake is here
+            for i in range(1,len(x)): queue.insert(nb+i, xb)    #the mistake was here
             for i in range(len(x)): 
                 queue[nb+i].append(x[i])
                 
