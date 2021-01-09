@@ -58,7 +58,7 @@ def find_path(mmap):
             for i in xt: 
                 if i in nodes: x.remove(i)
         
-        if len(x)==0: queue.pop(nb) # this is not an else statement for the above if
+        if len(x)==0: queue.pop(nb) 
         elif len(x)==1:
             nodes.append(x[0])
             queue[nb].append(x[0])
@@ -70,8 +70,7 @@ def find_path(mmap):
                 
     for i in queue:
         if [h-1,w-1] in i: path.append(len(i))
-        
-        
+              
     return path
 
 
@@ -80,8 +79,6 @@ def solution(nmap):
     h,w = np.shape(mmap)
 
     walls = [[i,j] for i in range(h) for j in range(w) if mmap[i,j]==1]
-    print(walls, "walls")
-    print(len(walls), "length of walls")
     
     paths =[]
     path = find_path(mmap)
@@ -99,12 +96,9 @@ def solution(nmap):
             else:
                 for p in path: paths.append(p)
                 if min(paths)==h+w-1: return min(paths)
-                # else:      #this was unnecessary and making two test cases fail. removed this bit and now all test cases passing. Hurray!
-                #     print(paths, "at this point")
-                #     return min(paths)
                 
         mmap[wall[0], wall[1]] = 1     
-    print(paths, "paths")
+        
     return min(paths)
 
 # answer is 7
