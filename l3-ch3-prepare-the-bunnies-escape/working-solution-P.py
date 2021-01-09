@@ -1,14 +1,19 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Dec 26 09:12:50 2020
+
+@author: Balan
+"""
 import numpy as np
 import copy
 
-def rm1wall(node,mmap):
+def rm1wall(wall,mmap):
     h,w = np.shape(mmap)
-    ir, ic = node[0],node[1]
+    ir, ic = wall[0],wall[1]
     if mmap[ir, ic]==1:
-        nei_lst = nei(node, mmap)
+        nei_lst = nei(wall, mmap)
         if len(nei_lst)>1: 
             mmap[ir,ic]=0
-            print("removed wall at", node)
             return
     return
 
@@ -27,10 +32,7 @@ def nei(node, mmap):
 
 
 def find_path(mmap):
-    h,w = np.shape(mmap)
-    # zeros = [(i,j) for i in range(h) for j in range(w) if mmap[i,j]==0]
-    # print(zeros, "zeros")
-    
+    h,w = np.shape(mmap)   
     
     queue = [[[0,0]]]
     nb=0
@@ -40,79 +42,46 @@ def find_path(mmap):
 
     for node in nodes:
         if node == [h-1,w-1]:
-            print("I am at the end", node, "node", h-1, w-1)
             for i in queue:
                 if [h-1,w-1] in i:
                     path.append(len(i))
-            # print(queue, "queue")
-            for branch in queue:
-                print(branch)
-                print(len(branch))
-            print(path, "path")
-            return path             
-
-        # ir, ic = node[0],node[1]      
+            return path                  
 
         for i in queue:
             if node in i:
                 nb=queue.index(i)
-                if nb == 1:
-                    print(node, "node at index", nb )
-                    print(i, "i - branch")
-        
-        x = nei(node,mmap)
-        if [2,4] in x:
-            print(node, "node for [2,4]")
-            print(x, "neighbours")
 
-        # if len(x)==1:
-        #     if x[0] not in nodes: 
-        #         nodes.append(x[0])
-        #         queue[nb].append(x[0])
-        #     elif x[0] in nodes: queue.pop(nb)
-            
-        # elif len(x)>1: #when uncommenting this, increase the tab for the following lines until appending queue[nb+i]
-        
+        x = nei(node,mmap)
+       
         if len(x)!=0:
             xt = copy.deepcopy(x)
-            for i in xt:
-                if i in nodes:
-                    x.remove(i)
+            for i in xt: 
+                if i in nodes: x.remove(i)
         
-        if len(x)==0: 
-            print(node, "node")
-            print(queue[nb], "at index", nb)
-            queue.pop(nb) # this is not an else statement for the above if
+        if len(x)==0: queue.pop(nb) # this is not an else statement for the above if
         elif len(x)==1:
             nodes.append(x[0])
             queue[nb].append(x[0])
         else:
             for i in x: nodes.append(i)
-            if node == [2,3]:
-                print(queue[nb], "branch for node [2,3] and index is", nb)
             xb = copy.deepcopy(queue[nb])
-            for i in range(1,len(x)): queue.insert(nb+i, xb)    #the mistake was here
-            for i in range(len(x)): 
-                queue[nb+i].append(x[i])
+            for i in range(1,len(x)): queue.insert(nb+i, xb) 
+            for i in range(len(x)): queue[nb+i].append(x[i])
                 
     for i in queue:
-        if [h-1,w-1] in i:
-            path.append(len(i))
-    # print(queue, "queue")
-    for branch in queue:
-        print(branch)
-        print(len(branch))
-    print(path)         
+        if [h-1,w-1] in i: path.append(len(i))
+        
+        
     return path
 
 
 def solution(nmap):
     mmap = np.array(nmap)
     h,w = np.shape(mmap)
-    print(h,w, "rows and columns")
 
-    walls = [(i,j) for i in range(h) for j in range(w) if mmap[i,j]==1]
-
+    walls = [[i,j] for i in range(h) for j in range(w) if mmap[i,j]==1]
+    print(walls, "walls")
+    print(len(walls), "length of walls")
     
     paths =[]
     path = find_path(mmap)
@@ -120,24 +89,22 @@ def solution(nmap):
     if len(path)!=0:
         if min(path)==h+w-1:
             return min(path)
-           
+    
     for wall in walls:
         rm1wall(wall,mmap)
         path = find_path(mmap)
 
         if len(path)!=0:
-            if min(path)==h+w-1:
-                return min(path)
+            if min(path)==h+w-1: return min(path)
             else:
-                for p in path:
-                    paths.append(p)
-                if min(paths)==h+w-1:
-                    return min(paths)
-                else: 
-                    return min(paths)
+                for p in path: paths.append(p)
+                if min(paths)==h+w-1: return min(paths)
+                # else:      #this was unnecessary and making two test cases fail. removed this bit and now all test cases passing. Hurray!
+                #     print(paths, "at this point")
+                #     return min(paths)
+                
         mmap[wall[0], wall[1]] = 1     
-        
-        #print(path, "path")
+    print(paths, "paths")
     return min(paths)
 
 # answer is 7
@@ -154,38 +121,47 @@ def solution(nmap):
 #         [0, 1, 1, 1, 1, 1], 
 #         [0, 0, 0, 0, 0, 0]]
 
-# # answer is 
-# nmap =  [[0, 1, 0, 1, 0, 0, 0], 
-#          [0, 0, 0, 1, 0, 1, 0]]
+# # answer is 10
+nmap =  [[0, 1, 0, 1, 0, 0, 0], 
+          [0, 0, 0, 1, 0, 1, 0]]
 
 # #test case - answer is 15
-# nmap = [[0, 0, 0, 1, 1,	0, 0, 0, 0],
+# nmap = [[0, 0, 0, 1, 1, 0, 0, 0, 0],
 #         [1, 1, 0, 1, 1, 0, 1, 1, 0],
 #         [1, 1, 0, 1, 1, 0, 1, 1, 0],
 #         [1, 1, 0, 0, 0, 0, 0, 1, 0],
-#         [0, 1, 1, 1, 1,	1, 0, 0, 1],
-#         [0, 0, 0, 1, 1,	1, 0, 1, 1],
+#         [0, 1, 1, 1, 1, 1, 0, 0, 1],
+#         [0, 0, 0, 1, 1, 1, 0, 1, 1],
 #         [0, 1, 0, 0, 0, 0, 0, 1, 0]]
 
-nmap = [[0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-        [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        [1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        [0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1],
-        [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+# #test case - answer is 15
+# nmap = [[0, 0, 0, 0, 0, 0, 0, 0, 0],
+#         [1, 1, 0, 1, 1, 0, 1, 1, 0],
+#         [1, 1, 0, 1, 1, 0, 1, 1, 0],
+#         [1, 1, 0, 0, 0, 0, 0, 1, 0],
+#         [0, 1, 1, 1, 1, 1, 0, 0, 1],
+#         [0, 0, 0, 1, 1, 1, 0, 1, 1],
+#         [0, 1, 0, 0, 0, 0, 0, 1, 0]]
+
+# nmap = [[0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+#         [1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+#         [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+#         [1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+#         [1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+#         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+#         [1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+#         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+#         [0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+#         [0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+#         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+#         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+#         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+#         [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1],
+#         [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1],
+#         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+#         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0],
+#         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+#         [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+#         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
 
 print(solution(nmap))
