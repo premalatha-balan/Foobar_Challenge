@@ -68,7 +68,7 @@ def find_path(mmap):
             for i in range(len(x)): queue[nb+i].append(x[i])
                 
     for i in queue:
-        if [h-1,w-1] in i: path.append(len(i))
+        if end_node in i: path.append(len(i))
               
     return path
 
