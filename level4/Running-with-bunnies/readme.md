@@ -24,7 +24,9 @@ worker IDs (as indexes) in sorted order. The bunnies are represented as a sorted
 bunnies, and time_limit is a non-negative integer that is at most 999.
 
 For instance, in the case of
+
 [
+
   [0, 2, 2, 2, -1],  # 0 = Start
   
   [9, 0, 2, 2, -1],  # 1 = Bunny 0
@@ -34,7 +36,9 @@ For instance, in the case of
   [9, 3, 2, 0, -1],  # 3 = Bunny 2
   
   [9, 3, 2, 2,  0],  # 4 = Bulkhead
+  
 ]
+
 and a time limit of 1, the five inner array rows designate the starting point, bunny 0, bunny 1, bunny 2, and the bulkhead door exit respectively. You could
 take the path:
 
