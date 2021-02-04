@@ -1,5 +1,5 @@
 def is_prime(b):    
-    for i in range(2,(int(b/2))):
+    for i in range(2,int(b**0.5)+1):
         if b%i==0: return False
     return True
 
