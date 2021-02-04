@@ -10,14 +10,13 @@ def build_prime_str(n):
     while len(pstr)<=n+5:
         b+=1
         if is_prime(b): pstr += str(b)  
-        print(pstr, b)
-    
+        # print(pstr, b)
     return pstr
 
 
 def solution(n):
     pstr= build_prime_str(n)
-    print(pstr)
-        
+    # print(pstr)
+    
     return pstr[n:n+5]
     
